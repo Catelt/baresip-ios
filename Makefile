@@ -22,6 +22,6 @@ clean:
 .PHONY: download
 download:
 	rm -fr baresip re rem
-	git clone https://github.com/baresip/baresip.git
-	git clone https://github.com/baresip/rem.git
-	git clone https://github.com/baresip/re.git
+	git clone https://github.com/baresip/baresip.git -b v2.0.2 --single-branch
+	git clone https://github.com/baresip/rem.git -b v2.0.1 --single-branch
+	git clone https://github.com/baresip/re.git -b v2.2.2 --single-branch
