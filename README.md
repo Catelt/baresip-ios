@@ -6,15 +6,23 @@
 [Baresip](https://github.com/baresip) is a modular SIP user-agent
 
 
-## Build 
+## Installation
+### With CocoaPods
+Add the following line to your `Podfile`
+```
+use_frameworks! :linkage => :static
 
+pod 'baresip', :git => 'https://github.com/Catelt/baresip-ios.git'
+``` 
+
+### Build manually
 To build static libraries for iOS run the following command:
 ```shell
 $ make download
 $ make contrib
 ```
 
-## Install
+#### Install
 - Link XCode target with:
     - `contrib/fat/lib/libbaresip.a`, `contrib/fat/lib/libre.a`, `contrib/fat/lib/librem.a`  
     - `libresolv.9.dlyb`
