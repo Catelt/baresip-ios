@@ -265,7 +265,7 @@ struct range {
 /** Defines the configuration line handler */
 typedef int (confline_h)(const struct pl *addr, void *arg);
 
-int  conf_configure(void);
+int  conf_configure(const char *pathdir);
 int  conf_configure_buf(const uint8_t *buf, size_t sz);
 int  conf_modules(void);
 void conf_path_set(const char *path);

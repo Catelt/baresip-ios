@@ -10,8 +10,6 @@
 ### With CocoaPods
 Add the following line to your `Podfile`
 ```
-use_frameworks! :linkage => :static
-
 pod 'baresip', :git => 'https://github.com/Catelt/baresip-ios.git'
 ``` 
 
