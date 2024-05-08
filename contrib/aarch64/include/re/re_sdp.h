@@ -63,7 +63,6 @@ struct sdp_session;
 
 int  sdp_session_alloc(struct sdp_session **sessp, const struct sa *laddr);
 void sdp_session_set_laddr(struct sdp_session *sess, const struct sa *laddr);
-const struct sa *sdp_session_laddr(struct sdp_session *sess);
 void sdp_session_set_lbandwidth(struct sdp_session *sess,
 				enum sdp_bandwidth type, int32_t bw);
 int  sdp_session_set_lattr(struct sdp_session *sess, bool replace,
@@ -174,8 +173,6 @@ extern const char sdp_proto_rtpsavp[];
 
 
 /* utility functions */
-
-enum sdp_dir sdp_dir_decode(const struct pl *pl);
 
 /** RTP Header Extensions, as defined in RFC 5285 */
 struct sdp_extmap {

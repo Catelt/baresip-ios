@@ -9,8 +9,6 @@ struct sipsess;
 
 
 typedef void (sipsess_conn_h)(const struct sip_msg *msg, void *arg);
-typedef int  (sipsess_desc_h)(struct mbuf **descp, const struct sa *src,
-			      const struct sa *dst, void *arg);
 typedef int  (sipsess_offer_h)(struct mbuf **descp, const struct sip_msg *msg,
 			       void *arg);
 typedef int  (sipsess_answer_h)(const struct sip_msg *msg, void *arg);
@@ -22,8 +20,6 @@ typedef void (sipsess_refer_h)(struct sip *sip, const struct sip_msg *msg,
 			       void *arg);
 typedef void (sipsess_close_h)(int err, const struct sip_msg *msg, void *arg);
 
-typedef void (sipsess_redirect_h)(const struct sip_msg *msg,
-				  const char *uri, void *arg);
 
 int  sipsess_listen(struct sipsess_sock **sockp, struct sip *sip,
 		    int htsize, sipsess_conn_h *connh, void *arg);
@@ -32,10 +28,8 @@ int  sipsess_connect(struct sipsess **sessp, struct sipsess_sock *sock,
 		     const char *to_uri, const char *from_name,
 		     const char *from_uri, const char *cuser,
 		     const char *routev[], uint32_t routec,
-		     const char *ctype,
+		     const char *ctype, struct mbuf *desc,
 		     sip_auth_h *authh, void *aarg, bool aref,
-		     const char *callid,
-		     sipsess_desc_h *desch,
 		     sipsess_offer_h *offerh, sipsess_answer_h *answerh,
 		     sipsess_progr_h *progrh, sipsess_estab_h *estabh,
 		     sipsess_info_h *infoh, sipsess_refer_h *referh,
@@ -51,9 +45,6 @@ int  sipsess_accept(struct sipsess **sessp, struct sipsess_sock *sock,
 		    sipsess_refer_h *referh, sipsess_close_h *closeh,
 		    void *arg, const char *fmt, ...);
 
-int  sipsess_set_redirect_handler(struct sipsess *sess,
-				  sipsess_redirect_h *redirecth);
-
 int  sipsess_progress(struct sipsess *sess, uint16_t scode,
 		      const char *reason, struct mbuf *desc,
 		      const char *fmt, ...);
@@ -67,4 +58,3 @@ int  sipsess_info(struct sipsess *sess, const char *ctype, struct mbuf *body,
 int  sipsess_set_close_headers(struct sipsess *sess, const char *hdrs, ...);
 void sipsess_close_all(struct sipsess_sock *sock);
 struct sip_dialog *sipsess_dialog(const struct sipsess *sess);
-void sipsess_abort(struct sipsess *sess);

@@ -57,8 +57,6 @@ int  tcp_accept(struct tcp_conn **tcp, struct tcp_sock *ts, tcp_estab_h *eh,
 		tcp_recv_h *rh, tcp_close_h *ch, void *arg);
 void tcp_reject(struct tcp_sock *ts);
 int  tcp_sock_local_get(const struct tcp_sock *ts, struct sa *local);
-int  tcp_settos(struct tcp_sock *ts, uint32_t tos);
-int  tcp_conn_settos(struct tcp_conn *tc, uint32_t tos);
 
 
 /* TCP Connection */
@@ -75,6 +73,7 @@ void tcp_conn_rxsz_set(struct tcp_conn *tc, size_t rxsz);
 void tcp_conn_txqsz_set(struct tcp_conn *tc, size_t txqsz);
 int  tcp_conn_local_get(const struct tcp_conn *tc, struct sa *local);
 int  tcp_conn_peer_get(const struct tcp_conn *tc, struct sa *peer);
+int  tcp_conn_fd(const struct tcp_conn *tc);
 size_t tcp_conn_txqsz(const struct tcp_conn *tc);
 
 
@@ -83,9 +82,6 @@ int  tcp_listen(struct tcp_sock **tsp, const struct sa *local,
 		tcp_conn_h *ch, void *arg);
 int  tcp_connect(struct tcp_conn **tcp, const struct sa *peer,
 		 tcp_estab_h *eh, tcp_recv_h *rh, tcp_close_h *ch, void *arg);
-int  tcp_connect_bind(struct tcp_conn **tcp, const struct sa *peer,
-		tcp_estab_h *eh, tcp_recv_h *rh, tcp_close_h *ch,
-		const struct sa *local, void *arg);
 int  tcp_local_get(const struct tcp_sock *ts, struct sa *local);
 
 

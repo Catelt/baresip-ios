@@ -4,8 +4,6 @@
  * Copyright (C) 2010 Creytiv.com
  */
 
-/* forward declarations */
-struct tls;
 
 enum {
 	SIP_PORT     = 5060,
@@ -18,9 +16,6 @@ enum sip_transp {
 	SIP_TRANSP_UDP = 0,
 	SIP_TRANSP_TCP,
 	SIP_TRANSP_TLS,
-	SIP_TRANSP_WS,
-	SIP_TRANSP_WSS,
-
 	SIP_TRANSPC,
 };
 
@@ -226,14 +221,6 @@ struct sip_contact {
 	enum sip_transp tp;
 };
 
-/** SIP connection config */
-struct sip_conncfg {
-	struct le he;
-	struct sa paddr;
-
-	uint16_t srcport;
-};
-
 struct sip;
 struct sip_lsnr;
 struct sip_request;
@@ -245,8 +232,7 @@ struct dnsc;
 
 typedef bool(sip_msg_h)(const struct sip_msg *msg, void *arg);
 typedef int(sip_send_h)(enum sip_transp tp, const struct sa *src,
-			const struct sa *dst, struct mbuf *mb,
-			struct mbuf **contp, void *arg);
+			const struct sa *dst, struct mbuf *mb, void *arg);
 typedef void(sip_resp_h)(int err, const struct sip_msg *msg, void *arg);
 typedef void(sip_cancel_h)(void *arg);
 typedef void(sip_exit_h)(void *arg);
@@ -278,23 +264,14 @@ void sip_set_trace_handler(struct sip *sip, sip_trace_h *traceh);
 /* transport */
 int  sip_transp_add(struct sip *sip, enum sip_transp tp,
 		    const struct sa *laddr, ...);
-int  sip_transp_add_websock(struct sip *sip, enum sip_transp tp,
-			    const struct sa *laddr,
-			    bool server, const char *cert, struct tls *tls);
-int  sip_transp_add_ccert(struct sip *sip, const struct uri *uri,
-			  const char *ccertfile);
 void sip_transp_flush(struct sip *sip);
 bool sip_transp_isladdr(const struct sip *sip, enum sip_transp tp,
 			const struct sa *laddr);
 const char *sip_transp_name(enum sip_transp tp);
 const char *sip_transp_param(enum sip_transp tp);
-enum sip_transp sip_transp_decode(const struct pl *pl);
 uint16_t sip_transp_port(enum sip_transp tp, uint16_t port);
 int  sip_transp_laddr(struct sip *sip, struct sa *laddr, enum sip_transp tp,
 		      const struct sa *dst);
-int  sip_transp_set_default(struct sip *sip, enum sip_transp tp);
-void sip_transp_rmladdr(struct sip *sip, const struct sa *laddr);
-int  sip_settos(struct sip *sip, uint8_t tos);
 
 
 /* request */
@@ -338,10 +315,7 @@ void sip_reply_addr(struct sa *addr, const struct sip_msg *msg, bool rport);
 int  sip_auth_authenticate(struct sip_auth *auth, const struct sip_msg *msg);
 int  sip_auth_alloc(struct sip_auth **authp, sip_auth_h *authh,
 		    void *arg, bool ref);
-
 void sip_auth_reset(struct sip_auth *auth);
-int  sip_auth_encode(struct mbuf *mb, struct sip_auth *auth, const char *met,
-		     const char *uri);
 
 
 /* contact */
@@ -363,10 +337,7 @@ int  sip_dialog_fork(struct sip_dialog **dlgp, struct sip_dialog *odlg,
 int  sip_dialog_update(struct sip_dialog *dlg, const struct sip_msg *msg);
 bool sip_dialog_rseq_valid(struct sip_dialog *dlg, const struct sip_msg *msg);
 const char *sip_dialog_callid(const struct sip_dialog *dlg);
-int  sip_dialog_set_callid(struct sip_dialog *dlg, const char *callid);
-const char *sip_dialog_uri(const struct sip_dialog *dlg);
 uint32_t sip_dialog_lseq(const struct sip_dialog *dlg);
-enum sip_transp sip_dialog_tp(const struct sip_dialog *dlg);
 bool sip_dialog_established(const struct sip_dialog *dlg);
 bool sip_dialog_cmp(const struct sip_dialog *dlg, const struct sip_msg *msg);
 bool sip_dialog_cmp_half(const struct sip_dialog *dlg,
@@ -403,7 +374,3 @@ int sip_cseq_decode(struct sip_cseq *cseq, const struct pl *pl);
 int sip_keepalive_start(struct sip_keepalive **kap, struct sip *sip,
 			const struct sip_msg *msg, uint32_t interval,
 			sip_keepalive_h *kah, void *arg);
-
-/* sip_conncfg */
-int sip_conncfg_set(struct sip *sip, const struct sa *paddr,
-		    const struct sip_conncfg conncfg);

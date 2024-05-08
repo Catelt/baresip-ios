@@ -28,14 +28,11 @@ extern const struct pl pl_null;
 
 void     pl_set_str(struct pl *pl, const char *str);
 void     pl_set_mbuf(struct pl *pl, const struct mbuf *mb);
-int32_t  pl_i32(const struct pl *pl);
-int64_t  pl_i64(const struct pl *pl);
 uint32_t pl_u32(const struct pl *pl);
 uint32_t pl_x32(const struct pl *pl);
 uint64_t pl_u64(const struct pl *pl);
 uint64_t pl_x64(const struct pl *pl);
 double   pl_float(const struct pl *pl);
-int      pl_bool(bool *val, const struct pl *pl);
 bool     pl_isset(const struct pl *pl);
 int      pl_strcpy(const struct pl *pl, char *str, size_t size);
 int      pl_strdup(char **dst, const struct pl *src);
@@ -106,11 +103,9 @@ uint8_t ch_hex(char ch);
 
 
 /* String functions */
-int  str_bool(bool *val, const char *str);
 int  str_hex(uint8_t *hex, size_t len, const char *str);
 void str_ncpy(char *dst, const char *src, size_t n);
 int  str_dup(char **dst, const char *src);
-int  str_x64dup(char **dst, uint64_t val);
 int  str_cmp(const char *s1, const char *s2);
 int  str_casecmp(const char *s1, const char *s2);
 size_t str_len(const char *s);
@@ -143,8 +138,6 @@ typedef void (fmt_param_h)(const struct pl *name, const struct pl *val,
 			   void *arg);
 
 bool fmt_param_exists(const struct pl *pl, const char *pname);
-bool fmt_param_sep_get(const struct pl *pl, const char *pname, char sep,
-		struct pl *val);
 bool fmt_param_get(const struct pl *pl, const char *pname, struct pl *val);
 void fmt_param_apply(const struct pl *pl, fmt_param_h *ph, void *arg);
 

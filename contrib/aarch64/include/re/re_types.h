@@ -8,17 +8,66 @@
 
 #ifdef _MSC_VER
 #include <stdlib.h>
-
-#include <BaseTsd.h>
-typedef SSIZE_T ssize_t;
-
 #endif
 
 /*
  * Basic integral types from C99
  */
 
+#ifdef HAVE_INTTYPES_H
 #include <inttypes.h>
+#else
+
+#ifndef __int8_t_defined
+#define __int8_t_defined
+
+/* Hack for OpenBSD */
+#ifndef __BIT_TYPES_DEFINED__
+
+#if defined(_CHAR_IS_SIGNED)
+typedef char                    int8_t;
+#elif defined(__STDC__)
+typedef signed char             int8_t;
+#else
+typedef char                    int8_t;
+#endif
+
+typedef signed short int          int16_t;
+typedef signed int                int32_t;
+typedef signed long long int      int64_t;
+
+#ifndef __uint32_t_defined
+#define __uint32_t_defined
+typedef unsigned char             uint8_t;
+typedef unsigned short int        uint16_t;
+typedef unsigned int              uint32_t;
+typedef unsigned long long int    uint64_t;
+#endif
+
+#endif /* __BIT_TYPES_DEFINED__ */
+
+#endif /* __int8_t_defined */
+#ifndef __ssize_t_defined
+typedef long     ssize_t;
+#define __ssize_t_defined
+#endif
+
+
+#ifndef WIN32
+typedef uint32_t socklen_t;
+#endif
+#endif
+
+
+/*
+ * Hack for Solaris which does not define int64_t/uint64_t for strict ANSI C
+ */
+#ifdef SOLARIS
+#if !(__STDC__ - 0 == 0 && !defined(_NO_LONGLONG))
+typedef signed long long int      int64_t;
+typedef unsigned long long int    uint64_t;
+#endif
+#endif
 
 
 /*
@@ -93,53 +142,6 @@ typedef bool _Bool;
 #else
 #define BREAKPOINT
 #endif
-
-/* Error return/goto debug helpers */
-#ifdef TRACE_ERR
-#define PRINT_TRACE_ERR(err)						\
-		(void)re_fprintf(stderr, "TRACE_ERR: %s:%u: %s():"	\
-			      " %m (%d)\n",				\
-			      __FILE__, __LINE__, __func__,		\
-			      (err), (err));
-#else
-#define PRINT_TRACE_ERR(err)
-#endif
-
-#define IF_ERR_GOTO_OUT(err)		\
-	if ((err)) {			\
-		PRINT_TRACE_ERR((err))	\
-		goto out;		\
-	}
-
-#define IF_ERR_GOTO_OUT1(err)		\
-	if ((err)) {			\
-		PRINT_TRACE_ERR((err))	\
-		goto out1;		\
-	}
-
-#define IF_ERR_GOTO_OUT2(err)		\
-	if ((err)) {			\
-		PRINT_TRACE_ERR((err))	\
-		goto out2;		\
-	}
-
-#define IF_ERR_RETURN(err)		\
-	if ((err)) {			\
-		PRINT_TRACE_ERR((err))	\
-		return (err);		\
-	}
-
-#define IF_RETURN_EINVAL(exp)		\
-	if ((exp)) {			\
-		PRINT_TRACE_ERR(EINVAL)	\
-		return (EINVAL);	\
-	}
-
-#define RETURN_ERR(err)			\
-	if ((err)) {			\
-		PRINT_TRACE_ERR((err))	\
-	}				\
-	return (err);
 
 
 /* Error codes */
@@ -242,10 +244,6 @@ typedef bool _Bool;
 #define ENOSR 218
 #endif
 
-/** Key was rejected by service */
-#ifndef EKEYREJECTED
-#define EKEYREJECTED 129
-#endif
 
 /*
  * Any C compiler conforming to C99 or later MUST support __func__
@@ -255,10 +253,3 @@ typedef bool _Bool;
 #else
 #define __REFUNC__ __FUNCTION__
 #endif
-
-/*
- * Give the compiler a hint which branch is "likely" or "unlikely" (inspired
- * by linux kernel and C++20/C2X)
- */
-#define likely(x)       __builtin_expect(!!(x), 1)
-#define unlikely(x)     __builtin_expect(!!(x), 0)

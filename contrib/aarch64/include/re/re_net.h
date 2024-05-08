@@ -39,7 +39,7 @@ struct sa;
 
 
 /* Net generic */
-int  net_dst_source_addr_get(const struct sa *dst, struct sa *ip);
+int  net_hostaddr(int af, struct sa *ip);
 int  net_default_source_addr_get(int af, struct sa *ip);
 int  net_default_gateway_get(int af, struct sa *gw);
 
@@ -105,15 +105,3 @@ int net_rt_debug(struct re_printf *pf, void *unused);
 /* Net strings */
 const char *net_proto2name(int proto);
 const char *net_af2name(int af);
-
-
-/* Socket helpers */
-#ifdef WIN32
-#define ERRNO_SOCK WSAGetLastError()
-#define BAD_SOCK INVALID_SOCKET
-typedef size_t re_sock_t;
-#else
-#define ERRNO_SOCK errno
-#define BAD_SOCK -1
-typedef int re_sock_t;
-#endif

@@ -22,7 +22,6 @@ struct tmr {
 
 
 void     tmr_poll(struct list *tmrl);
-uint64_t tmr_jiffies_usec(void);
 uint64_t tmr_jiffies(void);
 uint64_t tmr_next_timeout(struct list *tmrl);
 void     tmr_debug(void);
